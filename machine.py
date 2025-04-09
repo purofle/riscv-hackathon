@@ -2,12 +2,12 @@ memory = bytearray(1024)
 reg = [b"\x00"] * (32 * 4)
 pc = 0
 
-def write_memory(aadr: int, data: bytes, size: int = 4):
+def write_memory(addr: int, data: bytes, size: int = 4):
     global memory
-    if aadr < 0 or aadr + size >= len(memory):
+    if addr < 0 or addr + size >= len(memory):
         raise ValueError("Address out of bounds")
     for i in range(size):
-        memory[aadr + i] = data[i]
+        memory[addr + i] = data[i]
 
 def get_memory(addr: int, size: int):
     global memory
@@ -28,3 +28,10 @@ def set_reg(reg_num: int, value: bytes):
     if len(value) != 4:
         raise ValueError("Value must be 4 bytes")
     reg[reg_num] = value
+
+def set_pc(value: int):
+    global pc
+    pc = value
+
+def get_pc():
+    return pc
