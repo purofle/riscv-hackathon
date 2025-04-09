@@ -14,8 +14,13 @@ def process_file(filename):
     print('Processing file:', filename)
     with open(filename, 'rb') as f:
         elf = ELFFile(f)
-        text_section = elf.get_section_by_name('.text')
-        write_memory(0x0000, text_section.data(), size=len(text_section.data()))
+        addr = 0
+        for i in elf.iter_segments("PT_LOAD"):
+            print("Loading segment:", i.header)
+            write_memory(i.header["p_paddr"], i.data(), len(i.data()))
+
+    entry = elf.header["e_entry"]
+    set_pc(entry)
 
 def fetch_instruction():
     # 取出指令

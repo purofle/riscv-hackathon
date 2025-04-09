@@ -1,4 +1,4 @@
-memory = bytearray(1024)
+memory = bytearray(1024 * 1024)
 reg = [b"\x00"] * (32 * 4)
 pc = 0
 
