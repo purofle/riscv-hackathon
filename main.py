@@ -5,6 +5,7 @@ from elftools.elf.elffile import ELFFile
 from instruction.b_type import BType
 from instruction.i_type import IType
 from instruction.r_type import RType
+from instruction.u_type import UType
 from machine import get_memory, get_reg, write_memory, get_pc, set_pc
 from utils import bytes_to_int
 
@@ -26,21 +27,26 @@ def fetch_instruction():
     inst = bytes_to_int(inst_bytes)
     print(f"PC: {hex(get_pc())}  INST: {hex(inst)}")
     opcode = inst & 0x7F
-    # 0010011
-    if opcode == 0x13:
+    if opcode == 0b0010011:
         i_type = IType(inst)
         print(i_type)
         i_type.execute()
-    # 0110011
-    if opcode == 0x33:
+
+    if opcode == 0b0110011:
         r_type = RType(inst)
         print(r_type)
         r_type.execute()
-    # 1100011
-    if opcode == 0x63:
+
+    if opcode == 0b1100011:
         b_type = BType(inst)
         print(b_type)
         b_type.execute()
+
+    if opcode == 0b0110111:
+        u_type = UType(inst)
+        print(u_type)
+        u_type.lui()
+
     set_pc(get_pc() + 4)
     print_reg()
 
