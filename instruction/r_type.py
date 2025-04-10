@@ -16,6 +16,10 @@ class RType:
         self.funct3_map = {
             0x0: self.add if self.funct7 == 0 else self.sub,
             0x4: self.xor,
+            0x6: self._or,
+            0x7: self._and,
+            0x1: self.sll,
+            0x5: self.srl,
         }
 
     def __str__(self):
@@ -31,14 +35,28 @@ class RType:
     def add(self):
         result = (self.rs1_value + self.rs2_value)
         set_reg(self.rd, result)
-        print(f"ADD: x{self.rs1} + x{self.rs2} = {result} -> x{self.rd}")
 
     def sub(self):
         result = (self.rs1_value - self.rs2_value)
         set_reg(self.rd, result)
-        print(f"SUB: x{self.rs1} - x{self.rs2} = {self.rs1_value} - {self.rs2_value} = {result} -> x{self.rd}")
 
     def xor(self):
         result = self.rs1_value ^ self.rs2_value
         set_reg(self.rd, result)
-        print(f"XOR: x{self.rs1} ^ x{self.rs2} = {result} -> x{self.rd}")
+
+    # shit Python
+    def _or(self):
+        result = self.rs1_value | self.rs2_value
+        set_reg(self.rd, result)
+
+    def _and(self):
+        result = self.rs1_value & self.rs2_value
+        set_reg(self.rd, result)
+
+    def sll(self):
+        result = self.rs1_value << self.rs2_value
+        set_reg(self.rd, result)
+
+    def srl(self):
+        result = self.rs1_value >> self.rs2_value
+        set_reg(self.rd, result)
