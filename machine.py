@@ -1,4 +1,4 @@
-from utils import bytes_to_int
+from utils import int_to_bytes, bytes_to_int
 
 memory = bytearray(1024 * 1024)
 reg = [b"\x00"] * (32 * 4)
@@ -27,13 +27,11 @@ def get_reg(reg_num: int):
     return reg[reg_num]
 
 
-def set_reg(reg_num: int, value: bytes):
+def set_reg(reg_num: int, value: int):
     global reg
     if reg_num < 0 or reg_num >= len(reg):
         raise ValueError("Register number out of bounds")
-    if len(value) != 4:
-        raise ValueError("Value must be 4 bytes")
-    reg[reg_num] = value
+    reg[reg_num] = int_to_bytes(value)
 
 
 def set_pc(value: int):
@@ -46,6 +44,6 @@ def get_pc():
 
 
 def print_reg():
-    # for i in range(32):
-    #     print(f"x{i}: {hex(bytes_to_int(get_reg(i)))}", end=' ')
-    pass
+    for i in range(32):
+        print(f"x{i}: {hex(bytes_to_int(get_reg(i)))}", end=' ')
+    # pass
