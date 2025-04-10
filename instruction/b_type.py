@@ -15,9 +15,15 @@ class BType:
         self.rs1_value = bytes_to_int(get_reg(self.rs1))
         self.rs2_value = bytes_to_int(get_reg(self.rs2))
 
+        self.offset = (self.imm12 << 12) | (self.imm11 << 11) | (self.imm10_5 << 5) | (self.imm4_1 << 1)
+
+        if self.offset & (1 << 12):
+            self.offset = self.offset - (1 << 13)
+
         self.funct3_map = {
             0x1: self.bne,
             0x4: self.blt,
+            0x0: self.beq,
         }
 
     def __str__(self):
@@ -31,29 +37,25 @@ class BType:
             print(f"Unknown B-Type instruction with funct3: {self.funct3}")
 
     def blt(self):
-        offset = (self.imm12 << 12) | (self.imm11 << 11) | (self.imm10_5 << 5) | (self.imm4_1 << 1)
-
-        # 符号扩展
-        if offset & (1 << 12):
-            offset = offset - (1 << 13)
-
         if self.rs1_value < self.rs2_value:
-            new_pc = get_pc() + offset
-            print(f"BLT: x{self.rs1} < x{self.rs2} -> PC: {hex(get_pc())} + {offset} = {hex(new_pc)}")
+            new_pc = get_pc() + self.offset
+            print(f"BLT: x{self.rs1} < x{self.rs2} -> PC: {hex(get_pc())} + {self.offset} = {hex(new_pc)}")
             set_pc(new_pc)
         else:
             print("BLT: No branch taken")
 
     def bne(self):
-        offset = (self.imm12 << 12) | (self.imm11 << 11) | (self.imm10_5 << 5) | (self.imm4_1 << 1)
-
-        # 符号扩展
-        if offset & (1 << 12):
-            offset = offset - (1 << 13)
-
         if self.rs1_value != self.rs2_value:
-            new_pc = get_pc() + offset
-            print(f"BNE: x{self.rs1} != x{self.rs2} -> PC: {hex(get_pc())} + {offset} = {hex(new_pc)}")
+            new_pc = get_pc() + self.offset
+            print(f"BNE: x{self.rs1} != x{self.rs2} -> PC: {hex(get_pc())} + {self.offset} = {hex(new_pc)}")
             set_pc(new_pc)
         else:
             print("BNE: No branch taken")
+
+    def beq(self):
+        if self.rs1_value == self.rs2_value:
+            new_pc = get_pc() + self.offset
+            print(f"BEQ: x{self.rs1} == x{self.rs2} -> PC: {hex(get_pc())} + {self.offset} = {hex(new_pc)}")
+            set_pc(new_pc)
+        else:
+            print("BEQ: No branch taken")
