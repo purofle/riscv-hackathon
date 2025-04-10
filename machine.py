@@ -31,7 +31,7 @@ def set_reg(reg_num: int, value: int):
     global reg
     if reg_num < 0 or reg_num >= len(reg):
         raise ValueError("Register number out of bounds")
-    reg[reg_num] = int_to_bytes(value)
+    reg[reg_num] = int_to_bytes(value & 0xFFFFFFFF)
 
 
 def set_pc(value: int):

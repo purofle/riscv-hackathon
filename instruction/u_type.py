@@ -13,4 +13,4 @@ class UType:
     def lui(self):
         # LUI instruction
         imm_value = self.imm << 12
-        set_reg(self.rd, imm_value.to_bytes(4, byteorder='little'))
+        set_reg(self.rd, imm_value)

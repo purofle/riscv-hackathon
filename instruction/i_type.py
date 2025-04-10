@@ -22,16 +22,14 @@ class IType:
         # ADDI instruction
         rs1_value = bytes_to_int(get_reg(self.rs1))
         rd_value = rs1_value + self.imm
-        set_reg(self.rd, int_to_bytes(rd_value))
+        set_reg(self.rd, rd_value)
         print(f"ADDI: x{self.rs1} + {self.imm} = {rd_value} -> x{self.rd}")
 
     def ecall(self):
         a0 = bytes_to_int(get_reg(10))
         a1 = bytes_to_int(get_reg(11))
         if a0 == 1:
-            print(f"FAIL: test number {a1} failed!")
-        elif a0 == 2:
-            print(f"PASS: test number {a1} passed!")
+            print(a1)
         elif a0 == 0:
             for i in range(32):
                 print(f"x{i}: {hex(bytes_to_int(get_reg(i)))}", end=' ')
