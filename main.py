@@ -7,6 +7,7 @@ from elftools.elf.elffile import ELFFile
 from instruction.b_type import BType
 from instruction.i_type import IType
 from instruction.r_type import RType
+from instruction.s_type import SType
 from instruction.u_type import UType
 from machine import get_memory, write_memory, get_pc, set_pc, print_reg
 from utils import bytes_to_int
@@ -48,12 +49,14 @@ def fetch_instruction():
             b_type = BType(inst)
             print(b_type)
             b_type.execute()
-
         case 0b0110111:
             u_type = UType(inst)
             print(u_type)
             u_type.lui()
-
+        case 0b0100011:
+            s_type = SType(inst)
+            print(s_type)
+            s_type.execute()
         case 0b1111:
             # fence
             pass
