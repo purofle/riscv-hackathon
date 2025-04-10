@@ -9,9 +9,13 @@ class RType:
         self.rs1    = (inst >> 15) & 0x1F
         self.rs2    = (inst >> 20) & 0x1F
         self.funct7 = (inst >> 25) & 0x7F
+
+        self.rs1_value = bytes_to_int(get_reg(self.rs1))
+        self.rs2_value = bytes_to_int(get_reg(self.rs2))
         
         self.funct3_map = {
-            0x0: self.add,
+            0b000: self.add,
+            0b100: self.xor,
         }
 
     def __str__(self):
@@ -25,8 +29,11 @@ class RType:
             print(f"Unknown R-Type instruction with funct3: {self.funct3}")
     
     def add(self):
-        rs1_value = bytes_to_int(get_reg(self.rs1))
-        rs2_value = bytes_to_int(get_reg(self.rs2))
-        result = rs1_value + rs2_value
+        result = (self.rs1_value + self.rs2_value) & 0xF # 忽略算数溢出
         set_reg(self.rd, result.to_bytes(4, byteorder='little'))
         print(f"ADD: x{self.rs1} + x{self.rs2} = {result} -> x{self.rd}")
+
+    def xor(self):
+        result = self.rs1_value ^ self.rs2_value
+        set_reg(self.rd, result.to_bytes(4, byteorder='little'))
+        print(f"XOR: x{self.rs1} ^ x{self.rs2} = {result} -> x{self.rd}")

@@ -12,7 +12,11 @@ class BType:
         self.imm10_5 = (inst >> 25) & 0x3F
         self.imm12   = (inst >> 31) & 0x1
 
+        self.rs1_value = bytes_to_int(get_reg(self.rs1))
+        self.rs2_value = bytes_to_int(get_reg(self.rs2))
+
         self.funct3_map = {
+            0x1: self.bne,
             0x4: self.blt,
         }
 
@@ -27,15 +31,29 @@ class BType:
             print(f"Unknown B-Type instruction with funct3: {self.funct3}")
 
     def blt(self):
-        rs1_value = bytes_to_int(get_reg(self.rs1))
-        rs2_value = bytes_to_int(get_reg(self.rs2))
         offset = (self.imm12 << 12) | (self.imm11 << 11) | (self.imm10_5 << 5) | (self.imm4_1 << 1)
 
         # 符号扩展
         if offset & (1 << 12):
             offset = offset - (1 << 13)
 
-        if rs1_value < rs2_value:
+        if self.rs1_value < self.rs2_value:
             new_pc = get_pc() + offset
             print(f"BLT: x{self.rs1} < x{self.rs2} -> PC: {hex(get_pc())} + {offset} = {hex(new_pc)}")
             set_pc(new_pc)
+        else:
+            print("BLT: No branch taken")
+
+    def bne(self):
+        offset = (self.imm12 << 12) | (self.imm11 << 11) | (self.imm10_5 << 5) | (self.imm4_1 << 1)
+
+        # 符号扩展
+        if offset & (1 << 12):
+            offset = offset - (1 << 13)
+
+        if self.rs1_value != self.rs2_value:
+            new_pc = get_pc() + offset
+            print(f"BNE: x{self.rs1} != x{self.rs2} -> PC: {hex(get_pc())} + {offset} = {hex(new_pc)}")
+            set_pc(new_pc)
+        else:
+            print("BNE: No branch taken")

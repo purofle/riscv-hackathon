@@ -1,3 +1,5 @@
+from utils import bytes_to_int
+
 memory = bytearray(1024 * 1024)
 reg = [b"\x00"] * (32 * 4)
 pc = 0
@@ -35,3 +37,8 @@ def set_pc(value: int):
 
 def get_pc():
     return pc
+
+def print_reg():
+    # for i in range(32):
+    #     print(f"x{i}: {hex(bytes_to_int(get_reg(i)))}", end=' ')
+    pass
