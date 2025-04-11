@@ -6,4 +6,4 @@
 python3 main.py <your elf file>
 ```
 # 单步调试
-把 https://github.com/purofle/riscv-hackathon/blob/1e6e53b9d31d1605062a18729bdde6552603cbe4/main.py#L81 这行反注释掉。
+把 https://github.com/purofle/riscv-hackathon/blob/1e6e53b9d31d1605062a18729bdde6552603cbe4/main.py#L81 这行反注释掉.
