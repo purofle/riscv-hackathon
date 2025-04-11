@@ -1,5 +1,5 @@
 from machine import get_reg, set_reg, print_reg
-from utils import bytes_to_int, int_to_bytes
+from utils import bytes_to_int, int_to_bytes, sign_extend
 
 
 class IType:
@@ -19,6 +19,8 @@ class IType:
             # srli: imm[5:11]=0x00
             0x5: self.srli if (self.imm >> 5) & 0x3F == 0 else self.srai,
         }
+
+        self.imm = sign_extend(self.imm & 0xFFF, 12)
         
     def __str__(self):
         return f"IType: funct3={self.funct3}, rs1={self.rs1}, rd={self.rd}, imm={self.imm}"
@@ -70,6 +72,7 @@ class IType:
         a0 = bytes_to_int(get_reg(10))
         a1 = bytes_to_int(get_reg(11))
         if a0 == 1:
+            print("IType: ecall")
             print(a1)
         elif a0 == 0:
             for i in range(32):

@@ -6,6 +6,7 @@ from elftools.elf.elffile import ELFFile
 
 from instruction.b_type import BType
 from instruction.i_type import IType
+from instruction.j_type import JType
 from instruction.r_type import RType
 from instruction.s_type import SType
 from instruction.u_type import UType
@@ -37,7 +38,7 @@ def fetch_instruction():
     opcode = inst & 0x7F
 
     match opcode:
-        case 0b0010011 | 0b1110011:
+        case 0b0010011 | 0b1110011 | 0b0000011:
             i_type = IType(inst)
             print(i_type)
             i_type.execute()
@@ -57,6 +58,10 @@ def fetch_instruction():
             s_type = SType(inst)
             print(s_type)
             s_type.execute()
+        case 0b1101111 | 0b1100111:
+            j_type = JType(inst)
+            print(j_type)
+            j_type.execute()
         case 0b1111:
             # fence
             pass
@@ -73,3 +78,4 @@ if __name__ == '__main__':
     process_file(sys.argv[1])
     while True:
         fetch_instruction()
+        # input()

@@ -1,7 +1,7 @@
 from utils import int_to_bytes, bytes_to_int
 
 memory = bytearray(1024 * 1024)
-reg = [b"\x00"] * (32 * 4)
+reg = [b"\x00"] * 32
 pc = 0
 
 

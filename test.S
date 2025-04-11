@@ -1,3 +1,6 @@
-li x1, 1144
+li x1, 1146
 li x2, 1
-add x3, x1, x2
+sub x3, x1, x2
+
+li a0, 0
+ecall

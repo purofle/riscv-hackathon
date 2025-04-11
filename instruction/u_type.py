@@ -1,4 +1,5 @@
 from machine import set_reg
+from utils import sign_extend
 
 
 class UType:
@@ -13,4 +14,4 @@ class UType:
     def lui(self):
         # LUI instruction
         imm_value = self.imm << 12
-        set_reg(self.rd, imm_value)
+        set_reg(self.rd, imm_value & 0xFFFFFFFF)

@@ -1,5 +1,5 @@
-from machine import get_reg, write_memory
-from utils import bytes_to_int
+from machine import get_reg, write_memory, print_reg
+from utils import bytes_to_int, int_to_bytes, sign_extend
 
 
 class SType:
@@ -12,12 +12,13 @@ class SType:
 
         self.funct3_map = {
             0x0: self.sb,
+            0x2: self.sw,
         }
 
-        if self.imm & (1 << 12):
-            self.offset = self.imm - (1 << 13)
-        else:
-            self.offset = self.imm
+        self.offset = sign_extend(self.imm & 0xFFF, 12)
+
+    def __str__(self):
+        return f"SType(funct3={self.funct3}, rs1={self.rs1}, rs2={self.rs2}, imm={self.imm})"
 
     def sb(self):
         # SB instruction
@@ -25,6 +26,13 @@ class SType:
         address = bytes_to_int(get_reg(self.rs1)) + self.offset
         print(f"SB: x{self.rs2} -> MEM[{hex(address)}]")
         write_memory(address, rs2_value)
+
+    def sw(self):
+        # 取 rs2 低位四个字节
+        rs2_value = bytes_to_int(get_reg(self.rs2)) & 0xFFFFFFFF
+        rs1 = sign_extend(self.rs1 & 0xFFF, 12)
+        address = rs1 + self.offset
+        write_memory(address, int_to_bytes(rs2_value))
 
     def execute(self):
         if self.funct3 in self.funct3_map:
